@@ -1,4 +1,4 @@
-import bluetooth
+import bluetooth, lightblue
 from tkinter import *
 
 device_addr = ""
@@ -30,9 +30,7 @@ def init_gui():
     for dev in dev_list:
         lb.insert(i, dev)
         i = i + 1
-    select_button = Button(root, text="Select Device", command=select)
     lb.pack()
-    select_button.pack()
     root.mainloop()
 
 
@@ -40,8 +38,11 @@ def select():
     print("Test")
 
 
+def connect_to_IMU():
+    
+
 def main():
-    init_gui()
+    list_devices()
 
 
 if __name__ == "__main__":
