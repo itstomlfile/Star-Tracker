@@ -1,7 +1,8 @@
-import bluetooth, lightblue
+import bluetooth, subprocess
 from tkinter import *
 
 device_addr = ""
+device_name = ""
 
 
 def list_devices():
@@ -21,6 +22,7 @@ def list_devices():
     return device_list
 
 
+
 def init_gui():
     root = Tk()
     dev_list = list_devices()
@@ -30,16 +32,34 @@ def init_gui():
     for dev in dev_list:
         lb.insert(i, dev)
         i = i + 1
+    if "HC-06" in dev_list:
+        device_name = "HC-06"
+        device_addr = "20:19:09:06:08:71"
+        connect_to_imu()
     lb.pack()
     root.mainloop()
 
 
-def select():
-    print("Test")
+def connect_to_imu():
+    name = device_name  # Device name
+    addr = device_addr  # Device Address
+    port = 1  # RFCOMM port
+    passkey = "1111"  # passkey of the device you want to connect
 
+    # kill any "bluetooth-agent" process that is already running
+    subprocess.call("kill -9 `pidof bluetooth-agent`", shell=True)
 
-def connect_to_IMU():
-    
+    # Start a new "bluetooth-agent" process where XXXX is the passkey
+    status = subprocess.call("bluetooth-agent " + passkey + " &", shell=True)
+
+    # Now, connect in the same way as always with PyBlueZ
+    try:
+        s = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
+        s.connect((addr, port))
+    except bluetooth.btcommon.BluetoothError as err:
+        # Error handler
+        pass
+
 
 def main():
     list_devices()
